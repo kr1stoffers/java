@@ -1,3 +1,5 @@
+package Lab2_auto;
+
 import java.util.ArrayList;
 
 public class GarageCar {

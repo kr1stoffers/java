@@ -1,3 +1,5 @@
+package Lab1;
+
 import java.util.Scanner;
 
 public class App {
@@ -8,5 +10,4 @@ public class App {
         lab1.Lab1();
         // System.out.println(in.nextLine().toString());
     }
-
 }
