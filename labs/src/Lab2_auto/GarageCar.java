@@ -9,7 +9,7 @@ public class GarageCar {
         masCar.add(m);
     }
 
-    public void rmCar(Auto m, int i) {
+    public void rmCar(int i) {
         masCar.remove(i);
     }
 

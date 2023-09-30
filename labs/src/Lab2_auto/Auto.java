@@ -11,6 +11,8 @@ public class Auto {
     private String firm;
     /** Поле для хранения максимальной скорости автомобиля */
     private int maxSpeed;
+    /** Поле для хранения гос. номера автомобиля */
+    private String number;
 
     /**
      * Устанавливает значение поля {@link Auto#firm}
@@ -28,6 +30,15 @@ public class Auto {
      */
     public void setMaxSpeed(int speed) {
         maxSpeed = speed;
+    }
+
+    /**
+     * Установить значение поля {@link Auto#number}
+     * 
+     * @param number - гос. номер автомобиля
+     */
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     /**
@@ -49,21 +60,35 @@ public class Auto {
     }
 
     /**
-     * Создает автомобиль с фирмой "Без названия" и максимальной скоростью, равной 0
+     * Возвращает значение поля {@link Auto#number}
+     * 
+     * @return строка с гос. номером автомобиля
+     */
+    public String getNumber() {
+        return number;
+    }
+
+    /**
+     * Создает автомобиль с фирмой "Без названия", максимальной скоростью, равной 0
+     * и с гос. номером "А000АА"
      */
     public Auto() {
         firm = "Без названия";
         maxSpeed = 0;
+        number = "A000AA";
     }
 
     /**
-     * Создает автомобиль с задаными значениями фирмы и максимальной скорости
+     * Создает автомобиль с задаными значениями фирмы, максимальной скорости и гос.
+     * номером
      * 
-     * @param firma - название фирмы автомобиля
-     * @param speed - значение максимальной скорости автомобиля
+     * @param firma  - название фирмы автомобиля
+     * @param speed  - значение максимальной скорости автомобиля
+     * @param number - гос. номер автомобиля
      */
-    public Auto(String firma, int speed) {
+    public Auto(String firma, int speed, String number) {
         firm = firma;
         maxSpeed = speed;
+        this.number = number;
     }
 }
