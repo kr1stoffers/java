@@ -24,6 +24,17 @@ public class Armouries {
     }
 
     /**
+     * Метод вывода всех объктов из списка Арсенала
+     * 
+     */
+    public void printWeapon() {
+        System.out.println("В арсенале: ");
+        for (Weapon weapon : Weapons) {
+            System.out.println("\t" + weapon.toString());
+        }
+    }
+
+    /**
      * Подсчитывает и выводит на экран количество огнестрельного и холодного оружия
      * в списке объектов Оружия.
      */
@@ -39,7 +50,7 @@ public class Armouries {
             }
         }
 
-        System.out.print("Count of firearm: " + countFirearm);
+        System.out.println("Count of firearm: " + countFirearm);
         System.out.println("Count of edged: " + countEdged);
     }
 

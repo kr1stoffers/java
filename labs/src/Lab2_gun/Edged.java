@@ -48,6 +48,15 @@ public class Edged extends Weapon {
     }
 
     /**
+     * Выводит все поля объекта
+     * 
+     * @return строка со всеми значениями объекта
+     */
+    public String toString() {
+        return getName() + " " + getManufacturer() + " " + getDamage() + " " + bladeLength + " " + bladeHardness;
+    }
+
+    /**
      * Создает холодное оружие, с вызовом конструктора родительского класса без
      * параметров, и задает значение длины и твердости - 0
      */

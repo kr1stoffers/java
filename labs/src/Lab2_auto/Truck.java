@@ -6,6 +6,7 @@ public class Truck extends Auto {
     private String model;
     private int power;
     private Boolean trailer; // c прицепом или без
+    public static Scanner in = new Scanner(System.in);
 
     public Truck() {
         super();
@@ -46,7 +47,6 @@ public class Truck extends Auto {
     }
 
     public void setAllInfo() {
-        Scanner in = new Scanner(System.in);
         System.out.print("Введите фирму-производитель грузового авто: ");
         String nazv = in.next();
         setFirm(nazv);
