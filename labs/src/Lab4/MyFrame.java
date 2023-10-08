@@ -11,8 +11,8 @@ public class MyFrame {
         frame.setSize(650, 500);
         setWest(frame);
         setEast(frame);
-        setNorth(frame);
         frame.setVisible(true);
+        setNorth(frame);
         frame.setMinimumSize(frame.getSize());
         frame.pack();
     }
