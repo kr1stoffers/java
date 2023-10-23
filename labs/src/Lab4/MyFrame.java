@@ -9,11 +9,11 @@ public class MyFrame {
         JFrame frame = new JFrame("lab4");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(650, 500);
-        setWest(frame);
-        setEast(frame);
+        // setEast(frame);
         frame.setVisible(true);
+        setCenter(frame);
         setNorth(frame);
-        frame.setMinimumSize(frame.getSize());
+        frame.setMinimumSize(new Dimension(380, 400));
         frame.pack();
     }
 
@@ -35,44 +35,53 @@ public class MyFrame {
 
     }
 
-    public static void setWest(JFrame fr) {
+    public static void setCenter(JFrame fr) {
         ArrayList<JButton> masJB = new ArrayList<JButton>();
         JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new GridLayout(4, 3, 15, 15));
+        leftPanel.setLayout(new GridLayout(4, 5, 15, 15));
+        int buttons_flag = 1;
+        String[] sign = { "+", "-", "=" };
+        int flag_sign = 0;
 
-        for (int i = 0; i < 12; i++) {
-            if (i == 9 || i == 11) {
+        for (int i = 0; i < 20; i++) {
+            if (i == 3 || i == 8 || i == 13 || i == 15 || i == 17 || i == 18 || i == 19) {
                 masJB.add(new JButton(" "));
                 leftPanel.add(Box.createHorizontalStrut(fr.getSize().width / 6));
                 continue;
             }
-            if (i == 10) {
+            if (i == 16) {
                 masJB.add(new JButton("0"));
                 leftPanel.add(masJB.get(i));
-
             } else {
-                masJB.add(new JButton(Integer.toString(i + 1)));
+                if (i == 4 || i == 9 || i == 14) {
+                    masJB.add(new JButton(sign[flag_sign]));
+                    leftPanel.add(masJB.get(i));
+                    flag_sign += 1;
+                    continue;
+                }
+                masJB.add(new JButton(Integer.toString(buttons_flag)));
                 leftPanel.add(masJB.get(i));
+                buttons_flag += 1;
             }
 
         }
-        fr.add(leftPanel, BorderLayout.WEST);
+        fr.add(leftPanel, BorderLayout.CENTER);
     }
 
-    public static void setEast(JFrame fr) {
-        JPanel rightPanel = new JPanel();
-        String[] sign = { "+", "-", "=" };
-        rightPanel.setLayout(new GridLayout(4, 1, 15, 15));
+    // public static void setEast(JFrame fr) {
+    // JPanel rightPanel = new JPanel();
+    // String[] sign = { "+", "-", "=" };
+    // rightPanel.setLayout(new GridLayout(4, 1, 15, 15));
 
-        for (int i = 0; i < 4; i++) {
-            if (i != 3) {
-                rightPanel.add(new JButton(sign[i]));
-            } else {
-                rightPanel.add(Box.createHorizontalStrut(fr.getSize().width / 6));
-            }
+    // for (int i = 0; i < 4; i++) {
+    // if (i != 3) {
+    // rightPanel.add(new JButton(sign[i]));
+    // } else {
+    // rightPanel.add(Box.createHorizontalStrut(fr.getSize().width / 6));
+    // }
 
-        }
-        fr.add(rightPanel, BorderLayout.EAST);
-    }
+    // }
+    // fr.add(rightPanel, BorderLayout.EAST);
+    // }
 
 }
