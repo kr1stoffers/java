@@ -1,0 +1,4 @@
+{
+    "java.project.sourcePaths": ["labs/src", "labs/lib/POI-libs"],
+    "java.project.referencedLibraries": ["lib/**/*.jar"]
+}

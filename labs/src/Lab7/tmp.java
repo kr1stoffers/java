@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -77,9 +75,11 @@ public class tmp extends JFrame {
         under.add(remButton);
         remButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                while (myListModel.contains(text.getText())) {
-                    myListModel.removeElement(text.getText());
-                }
+                students.remove(myList.getSelectedValue().toString());
+                myListModel.removeAllElements();
+                students.forEach((name, value) -> {
+                    myListModel.addElement(name.toString());
+                });
             }
         });
 
@@ -140,7 +140,7 @@ public class tmp extends JFrame {
                     while ((s = myBReader.readLine()) != null) {
                         String[] parts = s.split(" ");
                         String name = parts[0];
-                        String value = "addres: " + parts[1] + " " + "age " + parts[2];
+                        String value = parts[1] + " " + parts[2];
                         students.put(name, value);
                         info.setText(value);
                         myListModel.addElement(name);
