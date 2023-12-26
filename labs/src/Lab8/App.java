@@ -20,18 +20,30 @@ public class App {
 
     private static Component setMenu(String[] buttonNames, HashMap<String, String> mapForTables) {
         Box mainMenu = new Box(BoxLayout.X_AXIS);
-        for (int i = 0; i < buttonNames.length; i++) {
-            JButton tempButton = new JButton(buttonNames[i]);
+        for (int i = 1; i < buttonNames.length; i++) {
+            final String currButton = buttonNames[i];
+            JButton tempButton = new JButton(currButton);
             tempButton.addActionListener(e -> {
+                JFrame newFrame = new JFrame(currButton);
+
                 JTable tempTable = myDB.getTableWithJoin(mapForTables.get(e.getActionCommand()));
-                mainFrame.remove(scrollPane);
+                // mainFrame.remove(scrollPane);
                 scrollPane = new JScrollPane(tempTable);
                 tempTable.setFillsViewportHeight(true);
-                mainFrame.add(scrollPane, BorderLayout.CENTER);
-                mainFrame.pack();
+                newFrame.add(scrollPane, BorderLayout.CENTER);
+                newFrame.setSize(700, 500);
+                newFrame.setMinimumSize(mainFrame.getSize());
+
+                newFrame.setVisible(true);
+                newFrame.pack();
             });
             mainMenu.add(tempButton);
         }
+        JTable mainTable = myDB.getTableWithJoin(mapForTables.get(buttonNames[0]));
+        scrollPane = new JScrollPane(mainTable);
+        mainTable.setFillsViewportHeight(true);
+        mainFrame.add(scrollPane, BorderLayout.CENTER);
+        mainFrame.pack();
         return mainMenu;
     }
 

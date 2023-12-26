@@ -6,7 +6,6 @@ import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.Box;
@@ -28,25 +27,37 @@ public class App {
     private static Component setMenu(String[] buttonNames, HashMap<String, String> mapForTables,
             HashMap<String, String> mapForTablesRus) {
         Box mainMenu = new Box(BoxLayout.X_AXIS);
-        for (int i = 0; i < buttonNames.length; i++) {
-            JButton tempButton = new JButton(buttonNames[i]);
+        for (int i = 1; i < buttonNames.length; i++) {
+            final String currButton = buttonNames[i];
+            JButton tempButton = new JButton(currButton);
             tempButton.addActionListener(e -> {
+                JFrame newFrame = new JFrame(currButton);
+
                 JTable tempTable = myDB.getTableWithJoin(mapForTables.get(e.getActionCommand()));
                 curTableName = mapForTablesRus.get(e.getActionCommand());
-                mainFrame.remove(scrollPane);
                 scrollPane = new JScrollPane(tempTable);
                 tempTable.setFillsViewportHeight(true);
-                mainFrame.add(scrollPane, BorderLayout.CENTER);
-                mainFrame.pack();
-                BorderLayout layout = (BorderLayout) mainFrame.getContentPane().getLayout();
-                Box southBox = (Box) layout.getLayoutComponent(BorderLayout.SOUTH);
-                for (int j = 0; j < southBox.getComponentCount(); j++) {
-                    southBox.getComponent(j).setEnabled(true);
-                }
+                newFrame.add(scrollPane, BorderLayout.CENTER);
+                newFrame.setSize(700, 500);
+                newFrame.setMinimumSize(mainFrame.getSize());
+                newFrame.add(setBottom(), BorderLayout.SOUTH);
+
+                newFrame.setVisible(true);
+                newFrame.pack();
+                // BorderLayout layout = (BorderLayout) newFrame.getContentPane().getLayout();
+                // Box southBox = (Box) layout.getLayoutComponent(BorderLayout.SOUTH);
+                // for (int j = 0; j < southBox.getComponentCount(); j++) {
+                // southBox.getComponent(j).setEnabled(true);
+                // }
 
             });
             mainMenu.add(tempButton);
         }
+        JTable mainTable = myDB.getTableWithJoin(mapForTables.get(buttonNames[0]));
+        scrollPane = new JScrollPane(mainTable);
+        mainTable.setFillsViewportHeight(true);
+        mainFrame.add(scrollPane, BorderLayout.CENTER);
+        mainFrame.pack();
         return mainMenu;
     }
 
@@ -62,7 +73,7 @@ public class App {
                 ToOffice.toWordDocx(columnNames, data, file,
                         curTableName);
         });
-        toWord.setEnabled(false);
+        // toWord.setEnabled(false);
         bottom.add(toWord);
         bottom.add(Box.createHorizontalGlue());
         JButton toExcel = new JButton("toExcel");
@@ -74,7 +85,7 @@ public class App {
                 ToOffice.toExcel(columnNames, data, file,
                         curTableName);
         });
-        toExcel.setEnabled(false);
+        // toExcel.setEnabled(false);
         bottom.add(toExcel);
         return bottom;
     }
@@ -117,15 +128,12 @@ public class App {
                 data[i][j] = (String) tableModel.getValueAt(i, j);
             }
         }
-        // for (int i = 0; i < data.length; i++) {
-        // System.out.println(Arrays.asList(data[i]));
-        // }
         return data;
     }
 
     public static void main(String[] args) {
 
-        mainFrame = new JFrame("SuperDB_Viewer");
+        mainFrame = new JFrame("Armouries");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         scrollPane = new JScrollPane();
         String curPath = "jdbc:sqlite:C:/Users/kr1stoffers/Documents/java/labs/src/Lab9/t.sqlite";
