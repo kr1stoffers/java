@@ -12,6 +12,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
@@ -25,65 +26,70 @@ public class App {
     static String curTableName = "";
 
     private static Component setMenu(String[] buttonNames, HashMap<String, String> mapForTables,
-            HashMap<String, String> mapForTablesRus) {
+            HashMap<String, String> mapForTablesRus, HashMap<String, JScrollPane> mapsp) {
         Box mainMenu = new Box(BoxLayout.X_AXIS);
-        for (int i = 1; i < buttonNames.length; i++) {
+        for (int i = 0; i < buttonNames.length; i++) {
             final String currButton = buttonNames[i];
             JButton tempButton = new JButton(currButton);
             tempButton.addActionListener(e -> {
-                JFrame newFrame = new JFrame(currButton);
+                if (e.getActionCommand() == buttonNames[0]) {
+                    JTable mainTable = myDB.getTableWithJoin(mapForTables.get(buttonNames[0]));
+                    mainFrame.remove(scrollPane);
+                    curTableName = mapForTablesRus.get(e.getActionCommand());
+                    scrollPane = new JScrollPane(mainTable);
+                    mapsp.put(curTableName, scrollPane);
+                    mainTable.setFillsViewportHeight(true);
+                    mainFrame.add(scrollPane, BorderLayout.CENTER);
+                    mainFrame.add(setBottom(curTableName, mapsp), BorderLayout.SOUTH);
 
-                JTable tempTable = myDB.getTableWithJoin(mapForTables.get(e.getActionCommand()));
-                curTableName = mapForTablesRus.get(e.getActionCommand());
-                scrollPane = new JScrollPane(tempTable);
-                tempTable.setFillsViewportHeight(true);
-                newFrame.add(scrollPane, BorderLayout.CENTER);
-                newFrame.setSize(700, 500);
-                newFrame.setMinimumSize(mainFrame.getSize());
-                newFrame.add(setBottom(), BorderLayout.SOUTH);
+                    mainFrame.pack();
+                } else {
+                    JFrame newFrame = new JFrame(currButton);
 
-                newFrame.setVisible(true);
-                newFrame.pack();
-                // BorderLayout layout = (BorderLayout) newFrame.getContentPane().getLayout();
-                // Box southBox = (Box) layout.getLayoutComponent(BorderLayout.SOUTH);
-                // for (int j = 0; j < southBox.getComponentCount(); j++) {
-                // southBox.getComponent(j).setEnabled(true);
-                // }
+                    JTable tempTable = myDB.getTableWithJoin(mapForTables.get(e.getActionCommand()));
+                    curTableName = mapForTablesRus.get(e.getActionCommand());
+                    scrollPane = new JScrollPane(tempTable);
+                    mapsp.put(curTableName, scrollPane);
+                    // scrollPane.setVisible(false);
+                    tempTable.setFillsViewportHeight(true);
+                    newFrame.add(scrollPane, BorderLayout.CENTER);
+                    newFrame.setSize(700, 500);
+                    newFrame.setMinimumSize(mainFrame.getSize());
+                    newFrame.add(setBottom(curTableName, mapsp), BorderLayout.SOUTH);
 
+                    newFrame.setVisible(true);
+                    newFrame.pack();
+                }
             });
             mainMenu.add(tempButton);
         }
-        JTable mainTable = myDB.getTableWithJoin(mapForTables.get(buttonNames[0]));
-        scrollPane = new JScrollPane(mainTable);
-        mainTable.setFillsViewportHeight(true);
-        mainFrame.add(scrollPane, BorderLayout.CENTER);
-        mainFrame.pack();
+
         return mainMenu;
     }
 
-    private static Component setBottom() {
+    private static Component setBottom(String tbname, HashMap<String, JScrollPane> mapsp) {
         Box bottom = new Box(BoxLayout.X_AXIS);
         JButton toWord = new JButton("toWord");
         toWord.addActionListener(e -> {
-            String[] columnNames = getTableHeader();
-            String[][] data = getTableData();
+            String[] columnNames = getTableHeader(tbname, mapsp);
+            String[][] data = getTableData(tbname, mapsp);
             File file = getFile("Save to Word file", "docx");
 
             if (!file.getName().contains("nullnull"))
                 ToOffice.toWordDocx(columnNames, data, file,
-                        curTableName);
+                        tbname);
         });
         // toWord.setEnabled(false);
         bottom.add(toWord);
         bottom.add(Box.createHorizontalGlue());
         JButton toExcel = new JButton("toExcel");
         toExcel.addActionListener(e -> {
-            String[] columnNames = getTableHeader();
-            String[][] data = getTableData();
+            String[] columnNames = getTableHeader(tbname, mapsp);
+            String[][] data = getTableData(tbname, mapsp);
             File file = getFile("Save to Excel file", "xls");
             if (!file.getName().contains("nullnull"))
                 ToOffice.toExcel(columnNames, data, file,
-                        curTableName);
+                        tbname);
         });
         // toExcel.setEnabled(false);
         bottom.add(toExcel);
@@ -103,7 +109,8 @@ public class App {
         return file;
     }
 
-    private static String[] getTableHeader() {
+    private static String[] getTableHeader(String tbname, HashMap<String, JScrollPane> mapsp) {
+        scrollPane = mapsp.get(tbname);
         JViewport viewPort = (JViewport) scrollPane.getComponent(0);
         JTable tempTable = (JTable) viewPort.getComponent(0);
         TableModel tableModel = tempTable.getModel();
@@ -116,7 +123,8 @@ public class App {
         return columnNames;
     }
 
-    private static String[][] getTableData() {
+    private static String[][] getTableData(String tbname, HashMap<String, JScrollPane> mapsp) {
+        scrollPane = mapsp.get(tbname);
         JViewport viewPort = (JViewport) scrollPane.getComponent(0);
         JTable tempTable = (JTable) viewPort.getComponent(0);
         TableModel tableModel = tempTable.getModel();
@@ -144,13 +152,15 @@ public class App {
 
         HashMap<String, String> mapForTables = new HashMap<>();
         HashMap<String, String> mapForTablesRus = new HashMap<>();
+        HashMap<String, JScrollPane> mapsp = new HashMap<>();
         for (int i = 0; i < buttonNames.length; i++) {
             mapForTables.put(buttonNames[i], tableNames[i]);
             mapForTablesRus.put(buttonNames[i], tableNamesRus[i]);
         }
-        mainFrame.add(setMenu(buttonNames, mapForTables, mapForTablesRus), BorderLayout.NORTH);
+
+        mainFrame.add(setMenu(buttonNames, mapForTables, mapForTablesRus, mapsp), BorderLayout.NORTH);
         mainFrame.setSize(700, 500);
-        mainFrame.add(setBottom(), BorderLayout.SOUTH);
+        // mainFrame.add(new JLabel(), BorderLayout.SOUTH);
         mainFrame.setMinimumSize(mainFrame.getSize());
         mainFrame.setVisible(true);
         mainFrame.pack();
